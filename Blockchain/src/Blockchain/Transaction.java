@@ -50,11 +50,11 @@ public boolean processTransaction() {
 				
 		//gather transaction inputs (Make sure they are unspent):
 		for(TransactionInput i : inputs) {
-			i.UTXO = NoobChain.UTXOs.get(i.transactionOutputId);
+			i.UTXO = Blockchain.UTXOs.get(i.transactionOutputId);
 		}
 
 		//check if transaction is valid:
-		if(getInputsValue() < NoobChain.minimumTransaction) {
+		if(getInputsValue() < Blockchain.minimumTransaction) {
 			System.out.println("#Transaction Inputs to small: " + getInputsValue());
 			return false;
 		}
@@ -67,13 +67,13 @@ public boolean processTransaction() {
 				
 		//add outputs to Unspent list
 		for(TransactionOutput o : outputs) {
-			NoobChain.UTXOs.put(o.id , o);
+			Blockchain.UTXOs.put(o.id , o);
 		}
 		
 		//remove transaction inputs from UTXO lists as spent:
 		for(TransactionInput i : inputs) {
 			if(i.UTXO == null) continue; //if Transaction can't be found skip it 
-			NoobChain.UTXOs.remove(i.UTXO.id);
+			Blockchain.UTXOs.remove(i.UTXO.id);
 		}
 		
 		return true;
@@ -84,7 +84,7 @@ public boolean processTransaction() {
 		float total = 0;
 		for(TransactionInput i : inputs) {
 			if(i.UTXO == null) continue; //if Transaction can't be found skip it 
-			total += i.UTXO.value;
+			total += i.UTXO.value; //UTXO est la sortie de i qui est la transaction
 		}
 		return total;
 	}
