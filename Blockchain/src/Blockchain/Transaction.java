@@ -58,6 +58,8 @@ public boolean processTransaction() {
 			System.out.println("#Transaction Inputs to small: " + getInputsValue());
 			return false;
 		}
+		if(this.isEnough()==true) System.out.println("Test requirement 02 succeeded ");
+		else System.out.println("Test requirement 02 didn't succeed ");
 		
 		//generate transaction outputs:
 		float leftOver = getInputsValue() - value; //get value of inputs then the left over change:
@@ -97,4 +99,8 @@ public boolean processTransaction() {
 		}
 		return total;
 	}
+	public boolean isEnough() {
+		if(getInputsValue() < Blockchain.minimumTransaction) return false;
+		else return true;
+		}
 }

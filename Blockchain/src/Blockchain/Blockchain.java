@@ -1,5 +1,6 @@
 package Blockchain;
 
+
 import java.security.Security;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,15 +28,26 @@ public class Blockchain {
 		
 		//create genesis transaction, which sends 100 NoobCoin to walletA: 
 		genesisTransaction = new Transaction(coinbase.publicKey, walletA.publicKey, 100f, null);
-		genesisTransaction.generateSignature(coinbase.privateKey);	 //manually sign the genesis transaction	
+		
+		genesisTransaction.generateSignature(coinbase.privateKey);	 //manually sign the genesis transaction
+		if(genesisTransaction.verifiySignature()==true) //Test 01.2,01.3,01.4
+			System.out.println("Testing requirements 01.2 & 01.3 & 01.4 succeeded");
+		else System.out.println("Testing requirements 01.2 & 01.3 & 01.4 didn't succeed ");
 		genesisTransaction.transactionId = "0"; //manually set the transaction id
 		genesisTransaction.outputs.add(new TransactionOutput(genesisTransaction.reciepient, genesisTransaction.value, genesisTransaction.transactionId)); //manually add the Transactions Output
 		UTXOs.put(genesisTransaction.outputs.get(0).id, genesisTransaction.outputs.get(0)); //its important to store our first transaction in the UTXOs list.
-		
+		if(genesisTransaction.outputs.get(0).isMine(walletA.publicKey)) System.out.println("Testing requirement 5 succeeded ");
+		else System.out.println("Testing requirement 5  didn't succeed ");
 		System.out.println("Creating and Mining Genesis block... ");
 		Block genesis = new Block("0");
-		genesis.addTransaction(genesisTransaction);
-		addBlock(genesis);
+		if(genesis.addTransaction(genesisTransaction)==true) { 
+			System.out.println("Test requirement 01.1 succeeded");}
+		else {
+			System.out.println("Test de contrainte 1 didn't succeed");
+			
+		
+		}
+		
 		
 		//testing
 		Block block1 = new Block(genesis.hash);
@@ -59,8 +71,10 @@ public class Blockchain {
 		System.out.println("\nWalletA's balance is: " + walletA.getBalance());
 		System.out.println("WalletB's balance is: " + walletB.getBalance());
 		
-		isChainValid();
+		if(isChainValid()) System.out.println("Testing requirement 8 succeeded ");
+		else System.out.println("Testing requirement 8 didn't succeed ");
 		
+		addBlock(genesis);
 	}
 	
 	public static Boolean isChainValid() {
@@ -115,10 +129,13 @@ public class Blockchain {
 					
 					if(input.UTXO.value != tempOutput.value) {
 						System.out.println("#Referenced input Transaction(" + t + ") value is Invalid");
+						System.out.println("Testing requirement 3 didn't  succeed ");
 						return false;
+						
 					}
 					
 					tempUTXOs.remove(input.transactionOutputId);
+					System.out.println("Testing requirement 3  succeed ");
 				}
 				
 				for(TransactionOutput output: currentTransaction.outputs) {
@@ -146,4 +163,3 @@ public class Blockchain {
 		blockchain.add(newBlock);
 	}
 }
-

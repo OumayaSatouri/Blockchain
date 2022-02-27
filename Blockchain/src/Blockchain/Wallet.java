@@ -69,7 +69,9 @@ public class Wallet {
 		return newTransaction;
 	}
 	
-}
+	}
+	
+
 
 
 
